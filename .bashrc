@@ -117,18 +117,22 @@ if ! shopt -oq posix; then
 fi
 
 export LANG="en_US.UTF-8"
+export LC_TYPE="en_US.UTF-8"
 export LC_ALL="C.UTF-8"
 export rm="rm -i"
 export mv="mv -i"
 export cp="cp -i"
-export GOPATH="/home/jeremy/go"
+export GOPATH="/home/jnancel/go"
 export SHELL="/bin/bash"
 
 # Useful
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias cat="ccat"
 
 # Gros doigts
 alias grpe="grep"
+alias grpep="grep"
+alias gerp="grep"
 alias vmi="vim"
 alias ivm="vim"
 alias shs="ssh"
@@ -149,22 +153,114 @@ alias gb="git branch"
 alias gl="git log"
 alias glp="git log --pretty=oneline"
 
-# Terraform aliases
-export gba="../../../.."
+# SSO
+alias ssologin="aws sso login --profile qa-fulladmin"
+
+# TF Management
+alias mfa="mfa.sh arn:aws:iam::147279713514:role/root-FullAdmin arn:aws:iam::301581393869:mfa/JNancel@euronext.com prd-access"
+
+# Network
+alias myip="curl ifconfig.me"
+
+# Terraform
+alias tf="terraform"
+export AWS_VAULT_BACKEND=file
+
+# pproxy
+alias pprox="pproxy -r socks5://127.0.0.1:3000 --daemon"
+
+# AWS
+euw1="--region eu-west-1"
+euw3="--region eu-west-3"
+eus1="--region eu-south-1"
+use1="--region us-east-1"
+fa="fulladmin"
+complete -C '/usr/local/bin/aws_completer' aws
 
 #export LANG="fr_FR.ISO-8859"
 
-export PATH=$PATH:/home/jeremy/Android/Sdk/tools/bin:/home/jeremy/bin:/home/jeremy/go/bin:/home/jeremy/Perso/Git/home/bin
+export PATH="$PATH:$HOME/.tfenv/bin:$HOME/.local/bin:$HOME/.rbenv/bin:/usr/local/go/bin"
+export PATH=$PATH:/home/jnancel/bin:/home/jnancel/go/bin:/home/jnancel/Perso/Git/home/bin
 export LESSCHARSET=utf-8
 source <(awless completion bash)
 
+function prox_socks() {
+  ssh -fN -D3000 -o ServerAliveInterval=20 bastion-nonprod-euw1
+  pprox
+  #export http_proxy=$prox
+  #export https_proxy=$prox
+  #export HTTP_PROXY=$prox
+  #export HTTPS_PROXY=$prox
+  #export SOCKS_PROXY=$prox
+}
+
+function prox_zscaler() {
+  #prox="http://127.0.0.1:9000"
+  export http_proxy="http://127.0.0.1:9000"
+  export https_proxy="http://127.0.0.1:9000"
+  export HTTP_PROXY="http://127.0.0.1:9000"
+  export HTTPS_PROXY="http://127.0.0.1:9000"
+}
+
+function unset_prox() {
+  unset http_proxy
+  unset https_proxy
+  unset HTTP_PROXY
+  unset HTTPS_PROXY
+}
+
+#prox="http://127.0.0.1:9000"
+pproxy_prox="http://127.0.0.1:8080"
+socks_prox="socks5://127.0.0.1:3000"
+http_prox="http://proxy.shared.cloud.int:443"
+#export http_proxy=http://127.0.0.1:3128/
+#export https_proxy=http://127.0.0.1:3128/
+#export http_proxy=http://proxy.shared.cloud.int:3128/
+#export https_proxy=http://proxy.shared.cloud.int:3128/
+#export http_proxy=http://172.23.224.1:9000/
+#export https_proxy=http://172.23.224.1:9000/
+#export HTTP_PROXY=http://172.23.224.1:9000/
+#export HTTPS_PROXY=http://172.23.224.1:9000/
+#export http_proxy=http://127.0.0.1:9000
+#export https_proxy=http://127.0.0.1:9000/
+#export HTTP_PROXY=http://127.0.0.1:9000/
+#export HTTPS_PROXY=http://127.0.0.1:9000/
+export http_proxy=$pproxy_prox
+export https_proxy=$pproxy_prox
+export HTTP_PROXY=$pproxy_prox
+export HTTPS_PROXY=$pproxy_prox
+export SOCKS_PROXY=$socks_prox
+#export REQUESTS_CA_BUNDLE=/etc/ssl/certs/Zscaler_cert.pem
+#export AZ_REQUESTS_CA_BUNDLE=/opt/az/lib/python3.10/site-packages/certifi/cacert.pem
+#export AWS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+#export http_proxy=http://127.0.0.1:9000/
+#export https_proxy=http://127.0.0.1:9000/
+export no_proxy='.es.amazonaws.com,192.168.0.29,169.254.169.254'
+#export no_proxy='.es.amazonaws.com,192.168.0.29'
+
 function _update_ps1() {
-    #PS1="$(~/go/bin/powerline-go -error $? -colorize-hostname -cwd-max-depth 6 -mode compatible)"
-    PS1="$(~/go/bin/powerline-go -error $? -colorize-hostname -cwd-max-depth 6)"
+    #PS1="$(~/go/bin/powerline-go -error $? -colorize-hostname -mode flat)"
+    PS1="$(~/go/bin/powerline-go -error $? -colorize-hostname -cwd-max-depth 3)"
 }
 
 if [ "$TERM" != "linux" ]; then
     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
 
+eval "$(rbenv init -)"
+
 export EDITOR=vim
+export WIN_HOME="/mnt/c/Users/JNancel"
+export WIN_DL="$WIN_HOME/Downloads"
+#export REQUESTS_CA_BUNDLE=/etc/ssl/certs/Zscaler_cert.pem
+
+mkdir -p ~/.screen && chmod 700 ~/.screen
+export SCREENDIR=$HOME/.screen
+
+# For WSL2 to be able to reach Internet
+#wsl.exe -d wsl-vpnkit service wsl-vpnkit start
+#wsl.exe -d wsl-vpnkit-0.4.1 --cd /app wsl-vpnkit
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
