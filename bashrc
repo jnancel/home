@@ -1,3 +1,5 @@
+# Amazon Q pre block. Keep at the top of this file.
+[[ -f "${HOME}/.local/share/amazon-q/shell/bashrc.pre.bash" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/bashrc.pre.bash"
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -156,7 +158,9 @@ alias gl="git log"
 alias glp="git log --pretty=oneline"
 
 # SSO
-alias ssologin="aws sso login --profile qa-fulladmin"
+alias ssostla="aws sso login --profile stla-harman-prd"
+alias ssototal="aws sso login --profile finopsprod-owner"
+alias ssodevo="aws sso login --profile devo-mgmt"
 
 # Network
 alias myip="curl ifconfig.me"
@@ -166,7 +170,7 @@ alias tf="terraform"
 export AWS_VAULT_BACKEND=file
 
 # pproxy
-alias pprox="pproxy -r socks5://127.0.0.1:3000 --daemon"
+#alias pprox="pproxy -r socks5://127.0.0.1:3000 --daemon"
 
 # AWS
 euw1="--region eu-west-1"
@@ -185,7 +189,7 @@ alias kcost="kubectl-cost"
 export PATH="$PATH:$HOME/.tfenv/bin:$HOME/.local/bin:/usr/local/go/bin"
 export PATH=$PATH:/home/jnancel/bin:/home/jnancel/go/bin:/home/jnancel/Perso/Git/home/bin
 export LESSCHARSET=utf-8
-source <(awless completion bash)
+#source <(awless completion bash)
 
 #function prox_socks() {
 #  ssh -fN -D3000 -o ServerAliveInterval=20 bastion-nonprod-euw1
@@ -247,7 +251,7 @@ if [ "$TERM" != "linux" ]; then
 fi
 
 export EDITOR=vim
-export WIN_HOME="/mnt/c/Users/JNancel"
+export WIN_HOME="/mnt/c/Users/jeremy.nancel"
 export WIN_DL="$WIN_HOME/Downloads"
 #export REQUESTS_CA_BUNDLE=/etc/ssl/certs/Zscaler_cert.pem
 
@@ -262,3 +266,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 complete -o default -F __start_kubectl kctl
+
+# Amazon Q post block. Keep at the bottom of this file.
+[[ -f "${HOME}/.local/share/amazon-q/shell/bashrc.post.bash" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/bashrc.post.bash"
